@@ -56,11 +56,35 @@ def get_pw_SNPs(pairs, threshold, popsize, seqdict):
         #print(f'{g1},{g2},{SNPcount},{sharedseq},{fSNP}\n')
     return(results)
 
-def get_core(allseqsdict, percentcore):
+
+
+
+def get_core(filename, percentcore, popsize):
+
+    print(filename)
+
     indexdict ={}
-    for key in allseqsdict:
-        seq = allseqsdict.get(key)
-        counter =0
+
+    chunklist = []
+    for j in range(1, popsize+1, 2):
+        #chunk =[]
+        chunklist.append(j)
+        #chunk.append(j+2)
+        #chunklist.append(chunk)
+    for coord in chunklist:
+        seq =''
+        key=''
+        #filehandle = open(filename)
+        #fc = filehandle.readlines()[coord[0]:coord[1]]
+        print(coord)
+        filehandle = open(filename)
+        key=filehandle.readlines()[coord].rstrip()
+        filehandle.close()
+        filehandle = open(filename)
+        seq=list(filehandle.readlines()[coord+1].rstrip())
+        filehandle.close()
+
+
         allpos=[]
         allpos = ([i for i,val in enumerate(seq) if val=='-' or val=='N'])
         for pos in allpos:
@@ -71,23 +95,22 @@ def get_core(allseqsdict, percentcore):
         print(f'Sequence {key} finished')
 
 
-
-    popsize = len(allseqsdict.keys())
     threshold = round((popsize/100)*percentcore)
     cutoff = (popsize-threshold)
-    print(cutoff)
     thresholdgapindex = []
     for key in indexdict:
         presence = indexdict.get(key)
         if presence > cutoff:
             thresholdgapindex.append(int(key))
-
     indexdict.clear()
+    return(thresholdgapindex)
+
+def remove_noncore(filehandle, thresholdgapindex):
+
     print(f'Number of non-core sites: {len(thresholdgapindex)}')
-    print(sys.getsizeof(allseqsdict))
-
-
     print('Deleting non-core sites')
+    outname = 'Coresites.fasta'
+    coreout=open(outname, 'w')
 
     def delete_noncore(mylist, idx):
         myarray = np.array(mylist)
@@ -96,18 +119,25 @@ def get_core(allseqsdict, percentcore):
         complement = list(myarray[mask])
         return(complement)
 
-    allseqsdictcore = {}
-    for key in allseqsdict:
-        seq = allseqsdict.get(key)
-        #allseqsdict[key] = delete_noncore(seq, thresholdgapindex)
-        allseqsdictcore[key] = delete_noncore(seq, thresholdgapindex)
+    chunklist = []
+    for j in range(1, popsize+1, 2):
+        chunklist.append(j)
+    for coord in chunklist:
+        seq =''
+        key=''
+
+        filehandle = open(filename)
+        key=filehandle.readlines()[coord].rstrip()
+        filehandle.close()
+        filehandle = open(filename)
+        seq=list(filehandle.readlines()[coord+1].rstrip())
+        filehandle.close()
+
+
+        coreseq = ''.join(delete_noncore(seq, thresholdgapindex))
+        coreout.write(key+'\n')
+        coreout.write(coreseq+'\n')
         print(f'{key} done (sites deleted)')
-
-    #return(allseqsdict)
-    return(allseqsdictcore)
-
-
-
 
 if __name__=='__main__':
 
@@ -119,9 +149,11 @@ if __name__=='__main__':
     fc = fh.readlines()
     outname = f'{fn}.1l'
     output = open(outname, 'w')
+    popsize=0
     for line in fc:
         if line.startswith('>'):
             output.write('\n'+line)
+            popsize+=1
         else:
             output.write(line.rstrip())
     percentcore = args.cutoff
@@ -129,35 +161,40 @@ if __name__=='__main__':
     fc.clear()
     print('Finished alignment format conversion, to one line per sequence')
 
-    fh1l = open(outname)
-    fc1l = fh1l.readlines()
+    #fh1l = open(outname)
+    #fc1l = fh1l.readlines()
     #fc1l = fc1l[0:21]
 
     #Make sequence dictionary: name[seq]
-    allcols = []
-    allseqs = []
-    allseqsdict ={}
-    for line in fc1l:
-        if line.startswith('>'):
-            lineindex = fc1l.index(line)
-            line = line.rstrip()
-            if args.keepref==True:
-                allcols.append(line.replace('>',''))
-                nextline = fc1l[lineindex+1].rstrip()
-                #allseqs.append(list(nextline))
-                allseqsdict[line] = list(nextline)
-            else:
-                if line !='>Reference':
-                    allcols.append(line.replace('>',''))
-                    nextline = fc1l[lineindex+1].rstrip()
-                    #allseqs.append(list(nextline))
-                    allseqsdict[line] = list(nextline)
-    fc1l.clear()
-    fh1l.close()
+    #allcols = []
+    #allseqs = []
+    #allseqsdict ={}
+    #for line in fc1l:
+    #    if line.startswith('>'):
+    #        lineindex = fc1l.index(line)
+    #        line = line.rstrip()
+    #        if args.keepref==True:
+    #            allcols.append(line.replace('>',''))
+    #            nextline = fc1l[lineindex+1].rstrip()
+    #            #allseqs.append(list(nextline))
+    #            allseqsdict[line] = list(nextline)
+    #        else:
+    #            if line !='>Reference':
+    #                allcols.append(line.replace('>',''))
+    #                nextline = fc1l[lineindex+1].rstrip()
+    #                #allseqs.append(list(nextline))
+    #                allseqsdict[line] = list(nextline)
+    #fc1l.clear()
+    #fh1l.close()
 
-    print(f'Extracting ≥{percentcore}% core sites')
-    allseqsdictcore = get_core(allseqsdict, percentcore)
-    allseqsdict.clear()
+    #print(f'Extracting ≥{percentcore}% core sites')
+    #allseqsdictcore = get_core(allseqsdict, percentcore)
+    #allseqsdict.clear()
+
+    gapindex = get_core(outname, percentcore, popsize)
+    remove_noncore(outname, gapindex)
+
+    exit()
 
     if args.nodists ==True:
         print('Finished')
