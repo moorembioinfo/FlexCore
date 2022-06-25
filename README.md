@@ -13,7 +13,7 @@ FlexCore.py is written in python3 and requires the following python packages:
 >os; sys; argparse; random; numpy; pandas; itertools; concurrent
 
 ## Usage
-python FlexCore.py --alignment [alignment file]
+	python FlexCore.py --alignment [alignment file]
 
 ## Input
 Multi-fasta whole genome alignment derived from mapping to a reference and variant calling such as from snippy, snippy-core and snippy-clean_full_aln:
