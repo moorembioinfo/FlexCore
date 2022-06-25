@@ -105,7 +105,7 @@ def get_core(filename, percentcore, popsize):
     indexdict.clear()
     return(thresholdgapindex)
 
-def remove_noncore(filehandle, thresholdgapindex):
+def remove_noncore(filename, thresholdgapindex):
 
     print(f'Number of non-core sites: {len(thresholdgapindex)}')
     print('Deleting non-core sites')
