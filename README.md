@@ -36,3 +36,9 @@ https://github.com/tseemann/snippy
 	'--keepref', help='Retain the reference sequence in the core calculation and SNP distances; action='store_true' 
 
 The --keepref option expects the reference file to be named '>Reference' in line with snippy-core output
+
+## Similar software
+Other software (that I'm aware of) for extracting flexible core genomes following reference mapping and variant calling:
+
+https://github.com/davideyre/runListCompare  
+https://github.com/zheminzhou/EToKi (phylo.py module)
