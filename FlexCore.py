@@ -130,11 +130,21 @@ if __name__=='__main__':
     output = open(outname, 'w')
     popsize=0
     for line in fc:
-        if line.startswith('>'):
-            output.write('\n'+line)
-            popsize+=1
+        if args.keepref ==False:
+            if line.startswith('>Reference'):
+                pass
+            else:
+                if line.startswith('>'):
+                    output.write('\n'+line)
+                    popsize+=1
+                else:
+                    output.write(line.rstrip())
         else:
-            output.write(line.rstrip())
+            if line.startswith('>'):
+                output.write('\n'+line)
+                popsize+=1
+            else:
+                output.write(line.rstrip())
     percentcore = args.cutoff
     output.close()
     fc.clear()
