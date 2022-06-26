@@ -23,7 +23,7 @@ https://github.com/tseemann/snippy
 *Coresites.csv*, the core genome alignment  
 *rSNPs95.csv*, the comma separated non-redundant (exclusive) pairwise distances (optional)
 
->SNP distances are calculated by the number of comparable sites per pair in the core genome alignment. Though a core genome cutoff for the total core alignment may be ≥95%, in principle any number of sites may be missing between a pair of sequences (they may have far fewer sites without gaps or ambiguous bases than the overall alignment size). As such, calculating SNP distance by dividing by the total alignment length may be innapropriate. The SNP counts, SNP distance and adjusted SNP counts are output (SNP distance times by overall alignment length)
+>SNP distances are calculated by the number of comparable sites per pair in the core genome alignment. Though a core genome cutoff for the total core alignment may be ≥95%, in principle any number of sites may be missing between a pair of sequences (they may have far fewer sites without gaps or ambiguous bases than the overall alignment size). As such, calculating SNP distance by dividing by the total alignment length may be innapropriate. The SNP counts, SNP distance (SNP count/length of pairwise alignment) and adjusted SNP counts are output (SNP distance times by overall alignment length)
 
 
 ## Options
