@@ -99,7 +99,7 @@ def get_pw_snps(pairs, coreseqindex):
 
 def get_core(filename, percentcore, popsize):
     indexdict = {}
-    chunklist = list(range(0, 2 * popsize + 1, 2))
+    chunklist = list(range(0, 2 * popsize, 2))
 
     for coord in chunklist:
 
@@ -136,7 +136,7 @@ def remove_noncore(filename, thresholdgapindex, popsize):
 
     chunklist = []
 
-    for j in range(0, (popsize * 2) + 1, 2):
+    for j in range(0, (popsize * 2), 2):
         chunklist.append(j)
 
     counter = 1
