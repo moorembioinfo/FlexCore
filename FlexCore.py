@@ -31,16 +31,16 @@ def add_args(a):
         "--nproc", "-p", help="Number of processes. Default: 1. ", type=int, default=1
     )
     parser.add_argument(
-        "--nodists",
-        help="Dont calculate SNP distances, only output core alignment. Default: False",
-        required=False,
-        action="store_true",
+        "--dists",
+        help="Calculate SNP distances, output core alignment and dists.",
+        action=argparse.BooleanOptionalAction,
+        default=True,
     )
     parser.add_argument(
         "--keepref",
-        help="Retain the reference sequence in the core calculation and SNP distances. Default: False",
-        required=False,
-        action="store_true",
+        help="Retain the reference sequence in the core calculation and SNP distances.",
+        action=argparse.BooleanOptionalAction,
+        default=False,
     )
 
     args = parser.parse_args(a)
@@ -170,7 +170,7 @@ if __name__ == "__main__":
     gapindex = get_core(outname, percentcore, popsize)
     coreseqindex = remove_noncore(outname, gapindex, popsize)
 
-    if args.nodists:
+    if not args.dists:
         print("Finished")
         exit()
     else:

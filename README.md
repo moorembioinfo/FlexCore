@@ -38,8 +38,8 @@ snippy-clean_full_aln core.full.aln > clean.full.aln
 '--alignment', '-a', help='Provide path and filename of alignment',                                  required=True
 '--cutoff',    '-c', help='Per-site percent core (integer). Default=95(%)',                          type=int, default=95
 '--nproc',     '-p', help='Number of processes',                                                     type=int, default=1
-'--nodists',         help='Dont calculate SNP distances, only output core alignment',                action='store_true'
-'--keepref',         help='Retain the reference sequence in the core calculation and SNP distances', action='store_true' 
+'--dists',           help='Calculate SNP distances, output both core alignment and dists',                
+'--keepref',         help='Retain the reference sequence in the core calculation and SNP distances'
 ```
 
 The `--keepref` option expects the reference file to be named '>Reference' in line with snippy-core output
