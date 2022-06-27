@@ -7,7 +7,7 @@ for overall speed and performance, followed by snp-dists (https://github.com/tse
 ## Dependencies
 
 FlexCore.py is written in python3 and requires the following python packages: 
->os; sys; argparse; random; numpy; pandas; itertools; concurrent
+>os; sys; argparse; random; numpy; pandas; itertools; concurrent; screed
 
 ## Usage
 	python FlexCore.py --alignment [alignment file]
