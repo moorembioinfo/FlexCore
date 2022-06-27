@@ -80,7 +80,7 @@ def get_pw_snps(pairs, coreseqindex):
             )
         )
 
-        if len(gapindex) > 0:
+        if gapindex:
             g1nuc = get_complementary_elements(g1seqlist, gapindex)
             g2nuc = get_complementary_elements(g2seqlist, gapindex)
         else:
@@ -99,10 +99,7 @@ def get_pw_snps(pairs, coreseqindex):
 
 def get_core(filename, percentcore, popsize):
     indexdict = {}
-    chunklist = []
-
-    for j in range(0, (popsize * 2) + 1, 2):
-        chunklist.append(j)
+    chunklist = list(range(0, 2 * popsize + 1, 2))
 
     for coord in chunklist:
 
@@ -119,7 +116,7 @@ def get_core(filename, percentcore, popsize):
             else:
                 indexdict[pos] = 1
 
-        print(f"Sequence {key} added to core")
+        print(f"Sequence {key} added to core.")
 
     threshold = round((popsize / 100) * percentcore)
     cutoff = popsize - threshold
@@ -130,7 +127,7 @@ def get_core(filename, percentcore, popsize):
     return thresholdgapindex
 
 
-def remove_noncore(filename, thresholdgapindex):
+def remove_noncore(filename, thresholdgapindex, popsize):
     coreseqindex = {}
     print(f"Number of non-core sites: {len(thresholdgapindex)}")
     print("Deleting non-core sites")
@@ -188,7 +185,7 @@ if __name__ == "__main__":
 
     # Run get-core and output core alignment
     gapindex = get_core(outname, percentcore, popsize)
-    coreseqindex = remove_noncore(outname, gapindex)
+    coreseqindex = remove_noncore(outname, gapindex, popsize)
 
     if args.nodists:
         print("Finished")
