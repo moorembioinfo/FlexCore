@@ -6,6 +6,7 @@ from itertools import combinations
 from itertools import repeat
 import concurrent.futures
 from concurrent.futures import ProcessPoolExecutor
+import screed
 
 def add_args(a):
     parser = argparse.ArgumentParser(description=''' Test description ''')
@@ -58,7 +59,7 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
 def get_core(filename, percentcore, popsize):
     indexdict ={}
     chunklist = []
-    for j in range(1, (popsize*2)+1, 2):
+    for j in range(0, (popsize*2)+1, 2):
         chunklist.append(j)
     for coord in chunklist:
         seq =''
@@ -100,7 +101,7 @@ def remove_noncore(filename, thresholdgapindex):
         complement = list(myarray[mask])
         return(complement)
     chunklist = []
-    for j in range(1, (popsize*2)+1, 2):
+    for j in range(0, (popsize*2)+1, 2):
         chunklist.append(j)
     counter =1
     for coord in chunklist:
@@ -124,27 +125,23 @@ if __name__=='__main__':
 
     args = add_args(sys.argv[1:])
     fn = args.alignment
-    fh = open(fn)
-    fc = fh.readlines()
     outname = f'{fn}.1l'
     output = open(outname, 'w')
     popsize=0
-    for line in fc:
+    for record in screed.open(fn):
         if args.keepref ==False:
-            if line.startswith('>Reference'):
+            if record.name=='Reference':
                 pass
             else:
-                if line.startswith('>'):
-                    output.write('\n'+line)
-                    popsize+=1
-                else:
-                    output.write(line.rstrip())
-        else:
-            if line.startswith('>'):
-                output.write('\n'+line)
+                output.write('>'+record.name+'\n')
+                output.write(record.sequence+'\n')
                 popsize+=1
-            else:
-                output.write(line.rstrip())
+        else:
+            output.write('>'+record.name+'\n')
+            output.write(record.sequence+'\n')
+            popsize+=1
+
+
     percentcore = args.cutoff
     output.close()
     fc.clear()
