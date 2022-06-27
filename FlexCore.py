@@ -54,7 +54,7 @@ def delete_noncore(mylist, idx):
     return complement
 
 
-def get_pw_SNPs(pairs, popsize, coreseqindex):
+def get_pw_snps(pairs, coreseqindex):
     results = []
     print("Running pairwise...")
 
@@ -89,12 +89,12 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
             g1nuc = g1seqlist
             g2nuc = g2seqlist
 
-        SNPcount = len(g1nuc) - sum(x == y for x, y in zip(g1nuc, g2nuc))
+        snp_count = len(g1nuc) - sum(x == y for x, y in zip(g1nuc, g2nuc))
         sharedseq = len(g1nuc) - len(gapindex)
-        SNPdist = SNPcount / len(g1nuc)
-        corSNP = SNPdist * len(g1seqlist)
-        results.append((f"{g1},{g2},{SNPcount},{sharedseq},{SNPdist},{corSNP}\n"))
-        # print(f'{g1},{g2},{SNPcount},{sharedseq},{fSNP}\n')
+        snp_dist = snp_count / len(g1nuc)
+        cor_snp = snp_dist * len(g1seqlist)
+        results.append((f"{g1},{g2},{snp_count},{sharedseq},{snp_dist},{cor_snp}\n"))
+        # print(f'{g1},{g2},{snp_count},{sharedseq},{fsnp}\n')
 
     return results
 
@@ -223,10 +223,8 @@ if __name__ == "__main__":
             chunks.append(pairslist[i : i + chunk_size])
 
         with ProcessPoolExecutor(nproc) as executor:
-            results = executor.map(
-                get_pw_SNPs, chunks, repeat(popsize), repeat(coreseqindex)
-            )
+            results = executor.map(get_pw_snps, chunks, repeat(coreseqindex))
 
-            for SNPs in results:
-                for SNPline in SNPs:
-                    pwoutput.write(SNPline)
+            for snps in results:
+                for snp_line in snps:
+                    pwoutput.write(snp_line)
