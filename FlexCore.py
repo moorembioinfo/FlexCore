@@ -75,14 +75,8 @@ def get_pw_snps(pairs, coreseqindex):
         # get sites missing in either seq of pair
         gapindex = list(
             set(
-                [i for i, e in enumerate(g1seqlist) if e == "-"]
-                + [i for i, e in enumerate(g2seqlist) if e == "-"]
-            )
-        )
-        gapindex += list(
-            set(
-                [i for i, e in enumerate(g1seqlist) if e == "N"]
-                + [i for i, e in enumerate(g2seqlist) if e == "N"]
+                [i for i, e in enumerate(g1seqlist) if e in ("-", "N")]
+                + [i for i, e in enumerate(g2seqlist) if e in ("-", "N")]
             )
         )
 
