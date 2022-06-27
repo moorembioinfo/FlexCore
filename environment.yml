@@ -1,0 +1,8 @@
+name: env-fc
+
+channels:
+  - conda-forge
+
+dependencies:
+  - numpy
+  - screed
