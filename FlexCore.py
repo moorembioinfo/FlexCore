@@ -134,10 +134,7 @@ def remove_noncore(filename, thresholdgapindex, popsize):
     outname = "Coresites.fasta"
     coreout = open(outname, "w")
 
-    chunklist = []
-
-    for j in range(0, (popsize * 2) + 1, 2):
-        chunklist.append(j)
+    chunklist = list(range(0, (popsize * 2) + 1, 2))
 
     counter = 1
 
