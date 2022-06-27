@@ -49,7 +49,7 @@ File | Description
 
 ## Options
 
-Flag          | Short flag | Description | Required | Default val
+Flag &nbsp; &nbsp; &nbsp; &nbsp;| Short flag | Description | Required | Default val
 --------------|------------|-------------|----------|--------------
 `--alignment` |  `-a` |  Provide path and filename of alignment | ✅
 `--cutoff` |     `-c` |  Per-site percent core (integer). Default=95(%) |  | 95
