@@ -5,7 +5,8 @@ from itertools import repeat, combinations
 from concurrent.futures import ProcessPoolExecutor
 
 import screed
-import numpy as np
+
+from utils import get_complement, stepped_enumerate
 
 
 def add_args(a):
@@ -46,18 +47,6 @@ def add_args(a):
     return args
 
 
-def get_complementary_elements(mylist, idx):
-    """
-    Returns the sublist of `mylist` consisting of the complement of elements indexed by `idx`.
-    """
-    myarray = np.array(mylist)
-    mask = np.full(len(mylist), False)
-    mask[idx] = True
-    complement = list(myarray[~mask])
-
-    return complement
-
-
 def get_pw_snps(pairs, coreseqindex):
     results = []
     print("Running pairwise...")
@@ -81,8 +70,8 @@ def get_pw_snps(pairs, coreseqindex):
         )
 
         if gapindex:
-            g1nuc = get_complementary_elements(g1seqlist, gapindex)
-            g2nuc = get_complementary_elements(g2seqlist, gapindex)
+            g1nuc = get_complement(g1seqlist, gapindex)
+            g2nuc = get_complement(g2seqlist, gapindex)
         else:
             g1nuc = g1seqlist
             g2nuc = g2seqlist
@@ -92,14 +81,14 @@ def get_pw_snps(pairs, coreseqindex):
         snp_dist = snp_count / len(g1nuc)
         cor_snp = snp_dist * len(g1seqlist)
         results.append((f"{g1},{g2},{snp_count},{sharedseq},{snp_dist},{cor_snp}\n"))
-        # print(f'{g1},{g2},{snp_count},{sharedseq},{fsnp}\n')
+        # print(f"{g1},{g2},{snp_count},{sharedseq},{fsnp}\n")
 
     return results
 
 
 def get_core(filename, percentcore, popsize):
     indexdict = {}
-    chunklist = list(range(0, 2 * popsize, 2))
+    chunklist = list(range(0, 2 * popsize + 1, 2))
 
     for coord in chunklist:
 
@@ -133,25 +122,18 @@ def remove_noncore(filename, thresholdgapindex, popsize):
     print("Deleting non-core sites")
     outname = "Coresites.fasta"
     coreout = open(outname, "w")
+    chunklist = list(range(0, (popsize * 2) + 1, 2))
 
-    chunklist = []
-
-    for j in range(0, (popsize * 2), 2):
-        chunklist.append(j)
-
-    counter = 1
-
-    for coord in chunklist:
+    for counter, coord in stepped_enumerate(chunklist, start=1, step=2):
         with open(filename) as filehandle:
             key = filehandle.readlines()[coord].rstrip()
             filehandle.seek(0)
             seq = list(filehandle.readlines()[coord + 1].rstrip())
 
         coreseqindex[key] = counter
-        coreseq = "".join(get_complementary_elements(seq, thresholdgapindex))
+        coreseq = "".join(get_complement(seq, thresholdgapindex))
         coreout.write(key + "\n")
         coreout.write(coreseq + "\n")
-        counter += 2
         print(f"{key} core seq output")
 
     return coreseqindex
@@ -180,6 +162,7 @@ if __name__ == "__main__":
 
     percentcore = args.cutoff
     output.close()
+
     print("Finished alignment format conversion")
     print(f"Processing core genome for {popsize} genomes")
 
@@ -200,10 +183,9 @@ if __name__ == "__main__":
         pwoutput.write(f"g1,g2,SNPs,sharedseq,SNPdistance,adjustedSNPs\n")
         nproc = args.nproc
         chunk_size = int(len(pairslist) / nproc)
-        chunks = []
-
-        for i in range(0, len(pairslist), chunk_size):
-            chunks.append(pairslist[i : i + chunk_size])
+        chunks = [
+            pairslist[i : i + chunk_size] for i in range(0, len(pairslist), chunk_size)
+        ]
 
         with ProcessPoolExecutor(nproc) as executor:
             results = executor.map(get_pw_snps, chunks, repeat(coreseqindex))
