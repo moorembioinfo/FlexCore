@@ -1,5 +1,7 @@
 # FlexCore
 
+![Python](https://badges.aleen42.com/src/python.svg) ![conda](https://img.shields.io/badge/%E2%80%8B-conda-%2344A833.svg?style=flat&logo=anaconda&logoColor=44A833)
+
 Extract per-site flexible (default ≥95%) bacterial core genomes from read-mapped whole genome alignments. Optionally calculate core genome SNP counts and distances.
 
 For 100% site inclusion core genomes I highly recommend instead using [snp-sites](https://github.com/sanger-pathogens/snp-sites)
@@ -13,6 +15,15 @@ FlexCore.py is written in python3 and requires the following python packages:
 > - screed
 
 ## Usage
+
+First set up a conda environment with the appropriate dependencies:
+
+```
+conda env create -f environment.yml
+conda activate env-fc
+```
+
+Then run the main script `FlexCore.py` referencing your alignment file:
 
 ```shell
 python FlexCore.py --alignment [alignment file]
