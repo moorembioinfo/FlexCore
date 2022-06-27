@@ -49,15 +49,13 @@ File | Description
 
 ## Options
 
-Flag | Short flag | Description | Defaults etc
------|------------|-------------|--------------
+Flag          | Short flag | Description | Defaults etc
+--------------|------------|-------------|--------------
 `--alignment` |  `-a` |  Provide path and filename of alignment |         required
 `--cutoff` |     `-c` |  Per-site percent core (integer). Default=95(%) | type=int, default=95
 `--nproc` |      `-p` |  Number of processes |                            type=int, default=1
 `--no-dists` |        |  Do not calculate SNP distances, output core alignment only
 `--keepref` |         |  Retain the reference sequence in the core calculation and SNP distances
-
-```
 
 The `--keepref` option expects the reference file to be named `>Reference` in line with snippy-core output
 
