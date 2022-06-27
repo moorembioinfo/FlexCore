@@ -43,7 +43,10 @@ def add_args(a):
     return args
 
 
-def delete_not_pw_shared(mylist, idx):
+def delete_noncore(mylist, idx):
+    """
+    Returns the sublist of `mylist` consisting of the complement of elements indexed by `idx`.
+    """
     myarray = np.array(mylist)
     mask = np.full(len(mylist), True, dtype=bool)
     mask[idx] = False
@@ -56,16 +59,15 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
     print("Running pairwise...")
 
     for pair in pairs:
-        g1 = pair.split(",")[0]
-        g2 = pair.split(",")[1]
+        g1, g2 = pair.split(",")
         g1line = coreseqindex.get(g1)
         g2line = coreseqindex.get(g2)
-        filehandle = open("Coresites.fasta")
-        g1seqlist = list(filehandle.readlines()[g1line].rstrip())
-        filehandle.close()
-        filehandle = open("Coresites.fasta")
-        g2seqlist = list(filehandle.readlines()[g2line].rstrip())
-        filehandle.close()
+
+        with open("Coresites.fasta") as filehandle:
+            g1seqlist = list(filehandle.readlines()[g1line].rstrip())
+            filehandle.seek(0)
+            g2seqlist = list(filehandle.readlines()[g2line].rstrip())
+
         # get sites missing in either seq of pair
         gapindex = list(
             set(
@@ -81,8 +83,8 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
         )
 
         if len(gapindex) > 0:
-            g1nuc = delete_not_pw_shared(g1seqlist, gapindex)
-            g2nuc = delete_not_pw_shared(g2seqlist, gapindex)
+            g1nuc = delete_noncore(g1seqlist, gapindex)
+            g2nuc = delete_noncore(g2seqlist, gapindex)
         else:
             g1nuc = g1seqlist
             g2nuc = g2seqlist
@@ -90,7 +92,7 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
         SNPcount = len(g1nuc) - sum(x == y for x, y in zip(g1nuc, g2nuc))
         sharedseq = len(g1nuc) - len(gapindex)
         SNPdist = SNPcount / len(g1nuc)
-        corSNP = SNPdist * (len(g1seqlist))
+        corSNP = SNPdist * len(g1seqlist)
         results.append((f"{g1},{g2},{SNPcount},{sharedseq},{SNPdist},{corSNP}\n"))
         # print(f'{g1},{g2},{SNPcount},{sharedseq},{fSNP}\n')
 
@@ -107,12 +109,12 @@ def get_core(filename, percentcore, popsize):
     for coord in chunklist:
         seq = ""
         key = ""
-        filehandle = open(filename)
-        key = filehandle.readlines()[coord].rstrip()
-        filehandle.close()
-        filehandle = open(filename)
-        seq = list(filehandle.readlines()[coord + 1].rstrip())
-        filehandle.close()
+
+        with open(filename) as filehandle:
+            key = filehandle.readlines()[coord].rstrip()
+            filehandle.seek(0)
+            seq = list(filehandle.readlines()[coord + 1].rstrip())
+
         allpos = []
         allpos = [i for i, val in enumerate(seq) if val == "-" or val == "N"]
 
@@ -139,14 +141,6 @@ def get_core(filename, percentcore, popsize):
     return thresholdgapindex
 
 
-def delete_noncore(mylist, idx):
-    myarray = np.array(mylist)
-    mask = np.full(len(mylist), True, dtype=bool)
-    mask[idx] = False
-    complement = list(myarray[mask])
-    return complement
-
-
 def remove_noncore(filename, thresholdgapindex):
     coreseqindex = {}
     print(f"Number of non-core sites: {len(thresholdgapindex)}")
@@ -164,12 +158,12 @@ def remove_noncore(filename, thresholdgapindex):
     for coord in chunklist:
         seq = ""
         key = ""
-        filehandle = open(filename)
-        key = filehandle.readlines()[coord].rstrip()
-        filehandle.close()
-        filehandle = open(filename)
-        seq = list(filehandle.readlines()[coord + 1].rstrip())
-        filehandle.close()
+
+        with open(filename) as filehandle:
+            key = filehandle.readlines()[coord].rstrip()
+            filehandle.seek(0)
+            seq = list(filehandle.readlines()[coord + 1].rstrip())
+
         coreseqindex[key] = counter
         coreseq = "".join(delete_noncore(seq, thresholdgapindex))
         coreout.write(key + "\n")
