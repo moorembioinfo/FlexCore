@@ -9,6 +9,9 @@ import numpy as np
 
 
 def add_args(a):
+    """
+    Parses arguments for program.
+    """
     parser = argparse.ArgumentParser(description=""" Test description """)
     parser.add_argument(
         "--alignment",
@@ -43,14 +46,15 @@ def add_args(a):
     return args
 
 
-def delete_noncore(mylist, idx):
+def get_complementary_elements(mylist, idx):
     """
     Returns the sublist of `mylist` consisting of the complement of elements indexed by `idx`.
     """
     myarray = np.array(mylist)
-    mask = np.full(len(mylist), True, dtype=bool)
-    mask[idx] = False
-    complement = list(myarray[mask])
+    mask = np.full(len(mylist), False)
+    mask[idx] = True
+    complement = list(myarray[~mask])
+
     return complement
 
 
@@ -83,8 +87,8 @@ def get_pw_snps(pairs, coreseqindex):
         )
 
         if len(gapindex) > 0:
-            g1nuc = delete_noncore(g1seqlist, gapindex)
-            g2nuc = delete_noncore(g2seqlist, gapindex)
+            g1nuc = get_complementary_elements(g1seqlist, gapindex)
+            g2nuc = get_complementary_elements(g2seqlist, gapindex)
         else:
             g1nuc = g1seqlist
             g2nuc = g2seqlist
@@ -153,7 +157,7 @@ def remove_noncore(filename, thresholdgapindex):
             seq = list(filehandle.readlines()[coord + 1].rstrip())
 
         coreseqindex[key] = counter
-        coreseq = "".join(delete_noncore(seq, thresholdgapindex))
+        coreseq = "".join(get_complementary_elements(seq, thresholdgapindex))
         coreout.write(key + "\n")
         coreout.write(coreseq + "\n")
         counter += 2
