@@ -40,19 +40,23 @@ snippy-clean_full_aln core.full.aln > clean.full.aln
 
 ## Output
 
-- `Coresites.csv`, the core genome alignment  
-- `rSNPs95.csv`, the comma separated non-redundant (exclusive) pairwise distances (optional)
+File | Description
+-----|------------
+`Coresites.csv` | the core genome alignment  
+`rSNPs95.csv`   | the comma separated non-redundant (exclusive) pairwise distances (optional)
 
->SNP distances are calculated by the number of comparable sites per pair in the core genome alignment. Though a core genome cutoff for the total core alignment may be ≥95%, in principle any number of sites may be missing between a pair of sequences (they may have far fewer sites without gaps or ambiguous bases than the overall alignment size). As such, calculating SNP distance by dividing by the total alignment length may be innapropriate. The SNP counts, SNP distance (SNP count/length of pairwise alignment) and adjusted SNP counts are output (SNP distance times by overall alignment length)
+> SNP distances are calculated by the number of comparable sites per pair in the core genome alignment. Though a core genome cutoff for the total core alignment may be ≥95%, in principle any number of sites may be missing between a pair of sequences (they may have far fewer sites without gaps or ambiguous bases than the overall alignment size). As such, calculating SNP distance by dividing by the total alignment length may be innapropriate. The SNP counts, SNP distance (SNP count/length of pairwise alignment) and adjusted SNP counts are output (SNP distance times by overall alignment length)
 
 ## Options
 
-```shell
-'--alignment',  '-a',  help='Provide path and filename of alignment',                                  required=True
-'--cutoff',     '-c',  help='Per-site percent core (integer). Default=95(%)',                          type=int,      default=95
-'--nproc',      '-p',  help='Number of processes',                                                     type=int,      default=1
-'--no-dists',          help='Do not calculate SNP distances, output core alignment only',                
-'--keepref',           help='Retain the reference sequence in the core calculation and SNP distances'
+Flag | Short flag | Description | Defaults etc
+-----|------------|-------------|--------------
+`--alignment` |  `-a` |  Provide path and filename of alignment |         required
+`--cutoff` |     `-c` |  Per-site percent core (integer). Default=95(%) | type=int, default=95
+`--nproc` |      `-p` |  Number of processes |                            type=int, default=1
+`--no-dists` |        |  Do not calculate SNP distances, output core alignment only
+`--keepref` |         |  Retain the reference sequence in the core calculation and SNP distances
+
 ```
 
 The `--keepref` option expects the reference file to be named `>Reference` in line with snippy-core output
