@@ -54,7 +54,7 @@ def delete_noncore(mylist, idx):
     return complement
 
 
-def get_pw_SNPs(pairs, popsize, coreseqindex):
+def get_pw_snps(pairs, coreseqindex):
     results = []
     print("Running pairwise...")
 
@@ -89,12 +89,12 @@ def get_pw_SNPs(pairs, popsize, coreseqindex):
             g1nuc = g1seqlist
             g2nuc = g2seqlist
 
-        SNPcount = len(g1nuc) - sum(x == y for x, y in zip(g1nuc, g2nuc))
+        snp_count = len(g1nuc) - sum(x == y for x, y in zip(g1nuc, g2nuc))
         sharedseq = len(g1nuc) - len(gapindex)
-        SNPdist = SNPcount / len(g1nuc)
-        corSNP = SNPdist * len(g1seqlist)
-        results.append((f"{g1},{g2},{SNPcount},{sharedseq},{SNPdist},{corSNP}\n"))
-        # print(f'{g1},{g2},{SNPcount},{sharedseq},{fSNP}\n')
+        snp_dist = snp_count / len(g1nuc)
+        cor_snp = snp_dist * len(g1seqlist)
+        results.append((f"{g1},{g2},{snp_count},{sharedseq},{snp_dist},{cor_snp}\n"))
+        # print(f'{g1},{g2},{snp_count},{sharedseq},{fsnp}\n')
 
     return results
 
@@ -107,16 +107,13 @@ def get_core(filename, percentcore, popsize):
         chunklist.append(j)
 
     for coord in chunklist:
-        seq = ""
-        key = ""
 
         with open(filename) as filehandle:
             key = filehandle.readlines()[coord].rstrip()
             filehandle.seek(0)
             seq = list(filehandle.readlines()[coord + 1].rstrip())
 
-        allpos = []
-        allpos = [i for i, val in enumerate(seq) if val == "-" or val == "N"]
+        allpos = [i for i, val in enumerate(seq) if val in ("-", "N")]
 
         for pos in allpos:
             if pos in indexdict:
@@ -128,13 +125,7 @@ def get_core(filename, percentcore, popsize):
 
     threshold = round((popsize / 100) * percentcore)
     cutoff = popsize - threshold
-    thresholdgapindex = []
-
-    for key in indexdict:
-        presence = indexdict.get(key)
-
-        if presence > cutoff:
-            thresholdgapindex.append(int(key))
+    thresholdgapindex = [int(key) for key in indexdict if indexdict.get(key) > cutoff]
 
     indexdict.clear()
 
@@ -156,9 +147,6 @@ def remove_noncore(filename, thresholdgapindex):
     counter = 1
 
     for coord in chunklist:
-        seq = ""
-        key = ""
-
         with open(filename) as filehandle:
             key = filehandle.readlines()[coord].rstrip()
             filehandle.seek(0)
@@ -183,7 +171,7 @@ if __name__ == "__main__":
     popsize = 0
 
     for record in screed.open(fn):
-        if args.keepref == False:
+        if not args.keepref:
             if record.name == "Reference":
                 pass
             else:
@@ -204,7 +192,7 @@ if __name__ == "__main__":
     gapindex = get_core(outname, percentcore, popsize)
     coreseqindex = remove_noncore(outname, gapindex)
 
-    if args.nodists == True:
+    if args.nodists:
         print("Finished")
         exit()
     else:
@@ -223,10 +211,8 @@ if __name__ == "__main__":
             chunks.append(pairslist[i : i + chunk_size])
 
         with ProcessPoolExecutor(nproc) as executor:
-            results = executor.map(
-                get_pw_SNPs, chunks, repeat(popsize), repeat(coreseqindex)
-            )
+            results = executor.map(get_pw_snps, chunks, repeat(coreseqindex))
 
-            for SNPs in results:
-                for SNPline in SNPs:
-                    pwoutput.write(SNPline)
+            for snps in results:
+                for snp_line in snps:
+                    pwoutput.write(snp_line)
