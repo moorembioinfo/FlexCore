@@ -18,7 +18,7 @@ FlexCore.py is written in python3 and requires the following python packages:
 
 First set up a conda environment with the appropriate dependencies:
 
-```
+```console
 conda env create -f environment.yml
 conda activate env-fc
 ```
@@ -26,7 +26,7 @@ conda activate env-fc
 Then run the main script `FlexCore.py` referencing your alignment file:
 
 ```shell
-python FlexCore.py --alignment [alignment file]
+python FlexCore.py --alignment <alignment file>
 ```
 
 ## Input
@@ -51,7 +51,7 @@ snippy-clean_full_aln core.full.aln > clean.full.aln
 '--alignment',  '-a',  help='Provide path and filename of alignment',                                  required=True
 '--cutoff',     '-c',  help='Per-site percent core (integer). Default=95(%)',                          type=int,      default=95
 '--nproc',      '-p',  help='Number of processes',                                                     type=int,      default=1
-'--dists',             help='Calculate SNP distances, output both core alignment and dists',                
+'--no-dists',          help='Do not calculate SNP distances, output core alignment only',                
 '--keepref',           help='Retain the reference sequence in the core calculation and SNP distances'
 ```
 
