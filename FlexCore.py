@@ -141,10 +141,8 @@ if __name__=='__main__':
             output.write(record.sequence+'\n')
             popsize+=1
 
-
     percentcore = args.cutoff
     output.close()
-    fc.clear()
     print('Finished alignment format conversion')
     print(f'Processing core genome for {popsize} genomes')
     #Run get-core and output core alignment
