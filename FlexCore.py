@@ -80,7 +80,9 @@ def get_pw_snps(pairs, coreseqindex):
         sharedseq = len(g1nuc) - len(gapindex)
         snp_dist = snp_count / len(g1nuc)
         cor_snp = snp_dist * len(g1seqlist)
-        results.append((f"{g1},{g2},{snp_count},{sharedseq},{snp_dist},{cor_snp}\n"))
+        gid1 = g1.replace('>','')
+        gid2 = g2.replace('>','')
+        results.append((f"{gid1},{gid2},{snp_count},{sharedseq},{snp_dist},{cor_snp}\n"))
         # print(f"{g1},{g2},{snp_count},{sharedseq},{fsnp}\n")
 
     return results
