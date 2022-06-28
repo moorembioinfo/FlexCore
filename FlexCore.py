@@ -88,7 +88,7 @@ def get_pw_snps(pairs, coreseqindex):
 
 def get_core(filename, percentcore, popsize):
     indexdict = {}
-    chunklist = list(range(0, 2 * popsize + 1, 2))
+    chunklist = list(range(0, 2 * popsize, 2))
 
     for coord in chunklist:
 
@@ -122,7 +122,7 @@ def remove_noncore(filename, thresholdgapindex, popsize):
     print("Deleting non-core sites")
     outname = "Coresites.fasta"
     coreout = open(outname, "w")
-    chunklist = list(range(0, (popsize * 2) + 1, 2))
+    chunklist = list(range(0, (popsize * 2), 2))
 
     for counter, coord in stepped_enumerate(chunklist, start=1, step=2):
         with open(filename) as filehandle:
