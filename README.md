@@ -69,8 +69,6 @@ Other software (that I'm aware of) for extracting flexible core genomes followin
 
 # AlignRarefaction
 
-![Python](https://badges.aleen42.com/src/python.svg) 
-
 Generate rarefaction data from read-mapped (reference-based) bacterial whole-genome alignments. A population of bacterial genomes is input and varying population sizes sampled to assess the impact of increased number and diversity of genomes
 
 ## Usage
