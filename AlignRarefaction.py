@@ -116,7 +116,7 @@ if __name__ == "__main__":
     output.write('\n')
 
 
-    for i in range(args.minpop,popsize,args.step):
+    for i in range(args.minpop,popsize+1,args.step):
         popresults=[]
         listofsizes=[]
         nproc = args.nproc
