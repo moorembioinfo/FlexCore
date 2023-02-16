@@ -4,6 +4,8 @@
 
 Extract per-site flexible (default ≥95%) bacterial core genomes from read-mapped whole genome alignments. Optionally calculate core genome SNP counts and distances.
 
+For flexible core extraction alone, this can be done rapidly with [BactCore](https://github.com/moorembioinfo/BactCore)
+
 For 100% site inclusion core genomes I highly recommend instead using [snp-sites](https://github.com/sanger-pathogens/snp-sites)
 for overall speed and performance, followed by [snp-dists](https://github.com/tseemann/snp-dists).
 
