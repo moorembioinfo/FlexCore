@@ -6,8 +6,7 @@ Extract per-site flexible (default ≥95%) bacterial core genomes from read-mapp
 
 For flexible core extraction alone, this can be done rapidly with [BactCore](https://github.com/moorembioinfo/BactCore)
 
-For 100% site inclusion core genomes I highly recommend instead using [snp-sites](https://github.com/sanger-pathogens/snp-sites)
-for overall speed and performance, followed by [snp-dists](https://github.com/tseemann/snp-dists).
+For overall speed and performance obtaining pairwise SNPs from strict core genomes, this can be done with [snp-dists](https://github.com/tseemann/snp-dists).
 
 ## Dependencies
 
